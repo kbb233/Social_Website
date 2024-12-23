@@ -56,7 +56,7 @@ public class SocialWebsiteController {
         if (existingUser != null) {
             System.out.println("Username already exists: " + existingUser.getUsername());
             response.put("message", "Username already exists. Please choose another username.");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response); // Use 409 Conflict for duplicate resource
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response); 
         }
 
         // Save the user to the database
@@ -75,9 +75,6 @@ public class SocialWebsiteController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
-
-
-
 
     // User Login
     @PostMapping("/login")
@@ -99,18 +96,26 @@ public class SocialWebsiteController {
 
     // Create Post
     @PostMapping("/posts")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        if (post.getUser() == null || post.getUser().getId() == null) {
-            return ResponseEntity.badRequest().body(null); 
+    public ResponseEntity<?> createPost(@RequestBody Post post) {
+        System.out.println("Received Post Payload: " + post);
+    
+        if (post.getUser() == null) {
+            return ResponseEntity.badRequest().body("User object is missing in the payload.");
         }
-    Optional<User> user = userRepository.findById(post.getUser().getId());
+    
+        if (post.getUser().getId() == null) {
+            return ResponseEntity.badRequest().body("User ID is missing in the payload.");
+        }
+    
+        Optional<User> user = userRepository.findById(post.getUser().getId());
         if (user.isEmpty()) {
-            return ResponseEntity.badRequest().body(null); 
+            return ResponseEntity.badRequest().body("User not found.");
         }
-    post.setUser(user.get());
-    Post savedPost = postRepository.save(post);
-    return ResponseEntity.ok(savedPost);
-}
+    
+        post.setUser(user.get());
+        Post savedPost = postRepository.save(post);
+        return ResponseEntity.ok(savedPost);
+    }
 
     // Get All Posts
     @GetMapping("/posts")
@@ -122,7 +127,6 @@ public class SocialWebsiteController {
         return ResponseEntity.ok(postDTOs);
 }
     
-
     // Search Posts by Content
     @GetMapping("/posts/search")
     public ResponseEntity<List<Post>> searchPosts(
@@ -162,9 +166,6 @@ public class SocialWebsiteController {
     }
 }
 
-
-
-
     // Follow User
     @PostMapping("/users/{followerId}/follow/{followedId}")
     public ResponseEntity<Follower> followUser(@PathVariable Long followerId, @PathVariable Long followedId) {
@@ -201,11 +202,11 @@ public class SocialWebsiteController {
             Like like = new Like();
             like.setPost(post);
             like.setUser(user);
-            likeRepository.save(like); // Save like using the repository
+            likeRepository.save(like); 
 
             // Increment likedNumber
             post.setLikedNumber(post.getLikedNumber() + 1);
-            postRepository.save(post); // Save updated post
+            postRepository.save(post); 
 
             return ResponseEntity.ok("Post liked");
         }
@@ -216,10 +217,6 @@ public class SocialWebsiteController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error liking post");
     }
 }
-
-
-
-
 
     // Search Users by Username
     @GetMapping("/users/search")
@@ -263,8 +260,5 @@ public class SocialWebsiteController {
         .toList();
     return ResponseEntity.ok(followers);
 }
-
-
-
 
 }

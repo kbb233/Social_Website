@@ -24,7 +24,7 @@ function CreatePostComponent({ onPostCreate }) {
     const newPost = {
       title,
       content,
-      user: { id: userId },
+      user: { id: Number(userId) },
       timestamp: new Date().toISOString(),
     };
 
