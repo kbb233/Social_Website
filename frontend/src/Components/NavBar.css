@@ -1,0 +1,30 @@
+.navigate-bar {
+    background-color: #007bff;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navigate-bar ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+    padding: 0;
+}
+
+.navigate-bar li {
+    margin: 0;
+}
+
+.navigate-bar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navigate-bar a:hover {
+    color: #f8f9fa;
+    text-decoration: underline;
+}
